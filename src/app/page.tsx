@@ -1,15 +1,24 @@
 "use client";
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTasks } from '@/hooks/use-tasks';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import TaskItem from '@/app/components/task-item';
 import { Skeleton } from '@/components/ui/skeleton';
+import type { Task } from '@/lib/types';
 
 export default function Home() {
-  const { tasks, isLoading } = useTasks();
+  const { tasks, isLoading: areTasksLoading } = useTasks();
+  const [isClient, setIsClient] = useState(false);
+  
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
   const incompleteTasks = tasks.filter(task => !task.isCompleted);
   const recentTasks = tasks.slice(0, 3);
+  
+  const isLoading = areTasksLoading || !isClient;
 
   return (
     <div className="flex flex-col gap-8">
@@ -53,7 +62,7 @@ export default function Home() {
           </div>
         ) : recentTasks.length > 0 ? (
           <div className="space-y-4">
-            {recentTasks.map(task => (
+            {recentTasks.map((task: Task) => (
               <TaskItem key={task.id} task={task} />
             ))}
           </div>
