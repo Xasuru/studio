@@ -52,15 +52,15 @@ export default function AddTaskDialog() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button>
-          <Plus className="mr-2 h-4 w-4" /> LOG IT
+        <Button size="icon" className="h-16 w-16 rounded-full shadow-lg">
+          <Plus className="h-8 w-8" />
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Log a New Mission</DialogTitle>
+          <DialogTitle>Fast Entry</DialogTitle>
           <DialogDescription>
-            Add a new Learning Activity Sheet to your log.
+            Quickly log a new mission.
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
