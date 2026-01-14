@@ -19,6 +19,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import AddTaskDialog from './add-task-dialog';
+import DailyReminder from './daily-reminder';
 
 
 const navItems = [
@@ -98,6 +99,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         <div className="fixed bottom-8 right-8 z-50">
           <AddTaskDialog />
         </div>
+        <DailyReminder />
       </SidebarInset>
     </SidebarProvider>
   );
