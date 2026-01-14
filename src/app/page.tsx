@@ -5,10 +5,9 @@ import Link from 'next/link';
 import { useTasks } from '@/hooks/use-tasks';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
-import { ArrowRight, Book, TestTube, Globe, Plus } from 'lucide-react';
-import AddTaskDialog from './components/add-task-dialog';
+import { ArrowRight } from 'lucide-react';
 import { subjects } from '@/lib/types';
+import TaskItem from './components/task-item';
 
 
 export default function Home() {
@@ -23,32 +22,27 @@ export default function Home() {
         <p className="text-muted-foreground">You have {tasks.filter(t => !t.isCompleted).length} pending tasks.</p>
       </header>
 
-      {/* Upcoming Tasks Section */}
+      {/* Upcoming Tasks Widget */}
       <section>
-        <ScrollArea className="w-full whitespace-nowrap">
-          <div className="flex w-max space-x-4 pb-4">
-            {upcomingTasks.map(task => (
-              <Card key={task.id} className="w-64 bg-gradient-to-br from-primary/20 to-primary/5">
-                <CardHeader>
-                  <CardTitle className="text-lg">{task.subject}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="font-semibold">{task.taskName}</p>
-                  <p className="text-sm text-muted-foreground">{task.dueDate}</p>
-                </CardContent>
-              </Card>
-            ))}
-             <Card className="w-64 border-dashed flex flex-col items-center justify-center">
-                <CardHeader>
-                    <CardTitle className="text-lg">All caught up!</CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <p className="text-center text-muted-foreground">Log a new task to see it here.</p>
-                </CardContent>
-            </Card>
-          </div>
-          <ScrollBar orientation="horizontal" />
-        </ScrollArea>
+        <Card className="bg-gradient-to-br from-orange-500/10 to-background">
+          <CardHeader>
+            <CardTitle>Mission Queue</CardTitle>
+            <CardDescription>Your next 3 upcoming tasks.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            {upcomingTasks.length > 0 ? (
+              <div className="flex flex-col gap-2">
+                {upcomingTasks.map(task => (
+                  <TaskItem key={task.id} task={task} />
+                ))}
+              </div>
+            ) : (
+               <div className="text-center text-sm text-muted-foreground py-4">
+                All caught up! No pending missions.
+              </div>
+            )}
+          </CardContent>
+        </Card>
       </section>
 
       {/* Lessons Section */}
