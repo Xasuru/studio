@@ -17,6 +17,13 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
   Form,
   FormControl,
   FormField,
@@ -25,6 +32,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Plus } from 'lucide-react';
+import { subjects } from '@/lib/types';
 
 const formSchema = z.object({
   subject: z.string().min(1, { message: 'Subject is required.' }),
@@ -52,7 +60,7 @@ export default function AddTaskDialog() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button size="icon" className="h-16 w-16 rounded-full shadow-lg">
+        <Button size="icon" className="h-16 w-16 rounded-full shadow-lg bg-orange-500 hover:bg-orange-600">
           <Plus className="h-8 w-8" />
         </Button>
       </DialogTrigger>
@@ -71,9 +79,18 @@ export default function AddTaskDialog() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Subject</FormLabel>
-                  <FormControl>
-                    <Input placeholder="e.g. Math" {...field} />
-                  </FormControl>
+                   <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select a subject" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {subjects.map(subject => (
+                        <SelectItem key={subject.name} value={subject.name}>{subject.name}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                   <FormMessage />
                 </FormItem>
               )}

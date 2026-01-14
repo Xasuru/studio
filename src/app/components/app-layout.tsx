@@ -18,6 +18,7 @@ import {
 } from '@/components/ui/sidebar';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import AddTaskDialog from './add-task-dialog';
 
 
 const navItems = [
@@ -94,6 +95,9 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         <main className="flex-1 overflow-auto p-4 md:p-6 lg:p-8">
             {children}
         </main>
+        <div className="fixed bottom-8 right-8 z-50">
+          <AddTaskDialog />
+        </div>
       </SidebarInset>
     </SidebarProvider>
   );

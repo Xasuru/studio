@@ -7,21 +7,13 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { ArrowRight, Book, TestTube, Globe, Plus } from 'lucide-react';
+import AddTaskDialog from './components/add-task-dialog';
+import { subjects } from '@/lib/types';
 
-const subjects = [
-  { name: "Filipino", icon: Book },
-  { name: "English", icon: Book },
-  { name: "Math", icon: TestTube },
-  { name: "Science", icon: TestTube },
-  { name: "TLE", icon: Globe },
-  { name: "MAPEH", icon: Globe },
-  { name: "A.P.", icon: Globe },
-  { name: "Values Ed.", icon: Globe },
-];
 
 export default function Home() {
   const { tasks } = useTasks();
-  const upcomingTasks = tasks.filter(t => !t.isCompleted).slice(0, 2);
+  const upcomingTasks = tasks.filter(t => !t.isCompleted).slice(0, 3);
 
   return (
     <div className="flex flex-col gap-8">
@@ -78,14 +70,6 @@ export default function Home() {
           ))}
         </div>
       </section>
-      
-       {/* Floating Action Button */}
-      <div className="fixed bottom-8 right-8 z-50 md:hidden">
-         <Button size="icon" className="h-16 w-16 rounded-full shadow-lg bg-orange-500 hover:bg-orange-600">
-          <Plus className="h-8 w-8" />
-        </Button>
-      </div>
-
     </div>
   );
 }
