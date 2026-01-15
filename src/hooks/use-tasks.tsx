@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { createContext, useContext, useState, useEffect, ReactNode, useMemo } from 'react';
@@ -11,6 +12,7 @@ import {
 import { addDocumentNonBlocking, deleteDocumentNonBlocking, setDocumentNonBlocking, updateDocumentNonBlocking } from '@/firebase/non-blocking-updates';
 import { signInAnonymously } from 'firebase/auth';
 import { useAuth } from '@/firebase/provider';
+import { add, format } from 'date-fns';
 
 
 interface TaskContextType {
@@ -49,10 +51,18 @@ export const TaskManagerProvider = ({ children }: { children: ReactNode }) => {
   const addTask = (subject: string, taskName: string) => {
     if (!tasksQuery || !logsCollection) return;
 
+    const getDueDate = () => {
+      if (taskName.toLowerCase().includes('las')) {
+        const tomorrow = add(new Date(), { days: 1 });
+        return format(tomorrow, 'MMM dd');
+      }
+      return 'Today';
+    };
+
     const newTask = {
       subject,
       taskName,
-      dueDate: 'Today', // This will be dynamic later
+      dueDate: getDueDate(),
       isCompleted: false,
       createdAt: serverTimestamp(),
     };
