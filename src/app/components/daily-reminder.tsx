@@ -10,11 +10,14 @@ export default function DailyReminder() {
   const { toast } = useToast();
   const [lastNotificationDate, setLastNotificationDate] = useState<string | null>(null);
 
-  // Load the last notification date from localStorage on component mount
+  // This effect now safely checks for `window` before accessing localStorage
   useEffect(() => {
-    const storedDate = localStorage.getItem('lastNotificationDate');
-    if (storedDate) {
-      setLastNotificationDate(storedDate);
+    // By checking for `window`, we ensure this code only runs on the client
+    if (typeof window !== 'undefined') {
+      const storedDate = localStorage.getItem('lastNotificationDate');
+      if (storedDate) {
+        setLastNotificationDate(storedDate);
+      }
     }
   }, []);
 
@@ -30,7 +33,10 @@ export default function DailyReminder() {
       });
       // Store today's date so we don't notify again
       const newDate = today;
-      localStorage.setItem('lastNotificationDate', newDate);
+      // We also check for `window` here for safety
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('lastNotificationDate', newDate);
+      }
       setLastNotificationDate(newDate);
     }
   };
