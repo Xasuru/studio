@@ -49,7 +49,7 @@ export default function AddTaskDialog() {
     defaultValues: {
       subject: '',
       taskName: '',
-      lasNumber: undefined,
+      lasNumber: '' as any, // Changed from undefined to empty string
     },
   });
 
