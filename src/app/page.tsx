@@ -24,7 +24,7 @@ export default function Home() {
 
       {/* Upcoming Tasks Widget */}
       <section>
-        <Card className="bg-gradient-to-br from-orange-500/10 to-background">
+        <Card className="bg-gradient-to-br from-primary/20 to-card">
           <CardHeader>
             <CardTitle>Mission Queue</CardTitle>
             <CardDescription>Your next 3 upcoming tasks.</CardDescription>

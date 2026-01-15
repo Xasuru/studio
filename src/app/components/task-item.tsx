@@ -4,7 +4,6 @@ import React from 'react';
 import { useTasks } from '@/hooks/use-tasks';
 import type { Task } from '@/lib/types';
 import { cn } from '@/lib/utils';
-import { Card, CardContent } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 
 
@@ -25,7 +24,7 @@ export default function TaskItem({ task }: TaskItemProps) {
       role="button"
       aria-pressed={task.isCompleted}
       className={cn(
-        'flex items-center gap-3 rounded-lg p-3 transition-colors hover:bg-accent',
+        'flex items-center gap-3 rounded-lg p-3 transition-colors hover:bg-accent/50',
         task.isCompleted && 'opacity-60'
       )}
     >
@@ -33,7 +32,7 @@ export default function TaskItem({ task }: TaskItemProps) {
         id={`task-${task.id}`}
         checked={task.isCompleted}
         onCheckedChange={handleToggle}
-        className="size-5 rounded-full"
+        className="size-5 rounded-full border-primary data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground"
       />
       <label
         htmlFor={`task-${task.id}`}
