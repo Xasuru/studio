@@ -1,6 +1,8 @@
 name: Build Vanguard APK
-on: 
-  workflow_dispatch: # This gives you the manual "Run workflow" button
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
 
 jobs:
   build:
@@ -30,4 +32,4 @@ jobs:
         with:
           name: Vanguard-App
           path: build/app/outputs/flutter-apk/app-release.apk
-          
+      
