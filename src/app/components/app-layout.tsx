@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, BookOpen, CalendarDays, User, GanttChartSquare, Bell, Search } from 'lucide-react';
+import { Home, BookOpen, CalendarDays, User, GanttChartSquare, Bell, Search, FlaskConical } from 'lucide-react';
 import {
   SidebarProvider,
   Sidebar,
@@ -26,6 +26,7 @@ const navItems = [
   { href: '/', label: 'Home', icon: Home },
   { href: '/tasks', label: 'Lessons', icon: BookOpen },
   { href: '/calendar', label: 'Calendar', icon: CalendarDays },
+  { href: '/analyzer', label: 'Analyzer', icon: FlaskConical },
 ];
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
