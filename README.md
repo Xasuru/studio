@@ -1,27 +1,31 @@
 ![App Brewery Banner](https://github.com/londonappbrewery/Images/blob/master/AppBreweryBanner.png)
 
-# Mi Card
+
+# BMI Calculator 💪
 
 ## Our Goal
 
-Now that you've seen how to create a Flutter app entirely from scratch, we're going to go further and learn more about how to design user interfaces for Flutter apps.
+The objective of this tutorial is to look at how we can customise Flutter Widgets to achieve our own beautiful user interface designs. If you have a designer on board, no matter how unconventional their designs are, we can create them using Flutter. 
+
 
 ## What you will create
 
-Mi Card is a personal business card. Imagine every time you wanted to give someone your contact details or your business card but you didn't have it on you. Well, now you can get them to download your business card as an app.
+We’re going to make a Body Mass Index Calculator inspired by the beautiful designs made by [Ruben Vaalt](https://dribbble.com/shots/4585382-Simple-BMI-Calculator). It will be a multi screen app with simple functionality but full-on custom styling. 
+
+![Finished App](https://github.com/londonappbrewery/Images/blob/master/bmi-calc-demo.gif)
 
 ## What you will learn
 
-* How to create Stateless Widgets
-* What is the difference between hot reload and hot refresh and running an app from cold
-* How to use Containers to lay out your UI
-* How to use Columns and Rows to position your UI elements
-* How to add custom fonts
-* How to add Material icons
-* How to style Text widgets
-* How to read and use Flutter Documentation
-
-
+- How to use Flutter themes to create coherent branding. 
+- How to create multi-page apps using Flutter Routes and Navigator.
+- How to extract and refactor Flutter Widgets with a click of the button. 
+- How to pass functions as parameters and fields.
+- How to use the GestureDetector Widget to detect more than just a tap.
+- How to use custom colour palettes by using hex codes.
+- How to customise Flutter Widgets to achieve a specific design style.
+- Understand Dart Enums and the Ternary Operator.
+- Learn about composition vs. inheritance and the Flutter way of creating custom UI.
+- Understand the difference between const and final in Dart and when to use each.
 
 >This is a companion project to The App Brewery's Complete Flutter Development Bootcamp, check out the full course at [www.appbrewery.co](https://www.appbrewery.co/)
 
