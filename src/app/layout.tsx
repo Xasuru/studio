@@ -3,6 +3,7 @@ import './globals.css';
 import { TaskManagerProvider } from '@/hooks/use-tasks';
 import { Toaster } from '@/components/ui/toaster';
 import AppLayout from '@/app/components/app-layout';
+import { FirebaseClientProvider } from '@/firebase';
 
 export const metadata: Metadata = {
   title: 'Mission Control',
@@ -12,7 +13,7 @@ export const metadata: Metadata = {
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: React.Node;
 }>) {
   return (
     <html lang="en" className="dark">
@@ -20,15 +21,17 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
         <link
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap"
           rel="stylesheet"
         />
       </head>
       <body className="font-body antialiased">
-        <TaskManagerProvider>
-          <AppLayout>{children}</AppLayout>
-          <Toaster />
-        </TaskManagerProvider>
+        <FirebaseClientProvider>
+          <TaskManagerProvider>
+            <AppLayout>{children}</AppLayout>
+            <Toaster />
+          </TaskManagerProvider>
+        </FirebaseClientProvider>
       </body>
     </html>
   );

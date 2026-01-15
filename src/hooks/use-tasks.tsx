@@ -1,8 +1,17 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { format, subDays, addDays } from 'date-fns';
+import React, { createContext, useContext, useState, useEffect, ReactNode, useMemo } from 'react';
 import type { Task } from '@/lib/types';
+import { useUser, useFirestore, useCollection, useMemoFirebase } from '@/firebase';
+import {
+  collection,
+  doc,
+  serverTimestamp,
+} from 'firebase/firestore';
+import { addDocumentNonBlocking, deleteDocumentNonBlocking, setDocumentNonBlocking, updateDocumentNonBlocking } from '@/firebase/non-blocking-updates';
+import { signInAnonymously } from 'firebase/auth';
+import { useAuth } from '@/firebase/provider';
+
 
 interface TaskContextType {
   tasks: Task[];
@@ -13,81 +22,68 @@ interface TaskContextType {
 
 const TaskContext = createContext<TaskContextType | undefined>(undefined);
 
-const defaultTasks: Task[] = [
-  {
-    id: '1',
-    subject: 'Math',
-    taskName: 'LAS #10',
-    dueDate: 'Today',
-    isCompleted: false,
-  },
-  {
-    id: '2',
-    subject: 'Science',
-    taskName: 'LAS #4',
-    dueDate: 'Yesterday',
-    isCompleted: true,
-  },
-  {
-    id: '3',
-    subject: 'English',
-    taskName: 'Essay Draft',
-    dueDate: 'Tomorrow',
-    isCompleted: false,
-  },
-];
-
 
 export const TaskManagerProvider = ({ children }: { children: ReactNode }) => {
-  const [tasks, setTasks] = useState<Task[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const { user, isUserLoading } = useUser();
+  const auth = useAuth();
+  const firestore = useFirestore();
 
   useEffect(() => {
-    try {
-      const storedTasks = localStorage.getItem('missionControlTasks');
-      if (storedTasks) {
-        setTasks(JSON.parse(storedTasks));
-      } else {
-        setTasks(defaultTasks);
-      }
-    } catch (error) {
-      console.error("Failed to load tasks from localStorage", error);
-      setTasks(defaultTasks);
+    if (!isUserLoading && !user) {
+      signInAnonymously(auth);
     }
-    setIsLoading(false);
-  }, []);
+  }, [isUserLoading, user, auth]);
+  
+  const tasksQuery = useMemoFirebase(() => {
+    if (!firestore || !user) return null;
+    return collection(firestore, 'users', user.uid, 'tasks');
+  }, [firestore, user]);
 
-  useEffect(() => {
-    if (!isLoading) {
-      try {
-        localStorage.setItem('missionControlTasks', JSON.stringify(tasks));
-      } catch (error) {
-        console.error("Failed to save tasks to localStorage", error);
-      }
-    }
-  }, [tasks, isLoading]);
+  const { data: tasks, isLoading } = useCollection<Omit<Task, 'id'>>(tasksQuery);
+
+  const logsCollection = useMemoFirebase(() => {
+    if (!firestore) return null;
+    return collection(firestore, 'logs');
+  }, [firestore]);
 
   const addTask = (subject: string, taskName: string) => {
-    const newTask: Task = {
-      id: new Date().toISOString(),
+    if (!tasksQuery || !logsCollection) return;
+
+    const newTask = {
       subject,
       taskName,
-      dueDate: 'Today',
+      dueDate: 'Today', // This will be dynamic later
       isCompleted: false,
+      createdAt: serverTimestamp(),
     };
-    setTasks(prevTasks => [newTask, ...prevTasks]);
+    addDocumentNonBlocking(tasksQuery, newTask);
+
+    const newLog = {
+      timestamp: serverTimestamp(),
+      subject: subject,
+      action: `TASK ADDED: ${taskName}`,
+    };
+    addDocumentNonBlocking(logsCollection, newLog);
   };
 
   const toggleTask = (id: string) => {
-    setTasks(prevTasks =>
-      prevTasks.map(task =>
-        task.id === id ? { ...task, isCompleted: !task.isCompleted } : task
-      )
-    );
+    if (!tasksQuery || !logsCollection) return;
+    const task = tasks?.find(t => t.id === id);
+    if (!task) return;
+
+    const taskRef = doc(tasksQuery, id);
+    updateDocumentNonBlocking(taskRef, { isCompleted: !task.isCompleted });
+
+    const newLog = {
+      timestamp: serverTimestamp(),
+      subject: task.subject,
+      action: task.isCompleted ? `PENDING: ${task.taskName}`: `CHAIN SECURED: ${task.taskName}`,
+    };
+    addDocumentNonBlocking(logsCollection, newLog);
   };
 
   return (
-    <TaskContext.Provider value={{ tasks, addTask, toggleTask, isLoading }}>
+    <TaskContext.Provider value={{ tasks: tasks || [], addTask, toggleTask, isLoading }}>
       {children}
     </TaskContext.Provider>
   );

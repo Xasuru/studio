@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { ArrowRight } from 'lucide-react';
 import { subjects } from '@/lib/types';
 import TaskItem from './components/task-item';
-
+import TerminalFeed from './components/terminal-feed';
 
 export default function Home() {
   const { tasks } = useTasks();
@@ -21,6 +21,11 @@ export default function Home() {
         <h1 className="text-3xl font-bold">Hi, Student</h1>
         <p className="text-muted-foreground">You have {tasks.filter(t => !t.isCompleted).length} pending tasks.</p>
       </header>
+
+      {/* Terminal Feed */}
+      <section>
+        <TerminalFeed />
+      </section>
 
       {/* Upcoming Tasks Widget */}
       <section>
