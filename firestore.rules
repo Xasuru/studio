@@ -105,9 +105,7 @@ service cloud.firestore {
     match /logs/{logId} {
       allow get: if true;
       allow list: if true;
-      // Writes are disabled on the client. It is assumed that logs are created
-      // by a trusted server-side environment (e.g., Cloud Functions).
-      allow create: if false;
+      allow create: if isSignedIn();
       allow update: if false;
       allow delete: if false;
     }
