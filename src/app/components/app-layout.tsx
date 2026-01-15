@@ -36,7 +36,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       <Sidebar>
         <SidebarHeader>
            <div className="flex items-center justify-between p-2">
-            <div className="flex items-center gap-2 ">
+            <Link href="/profile" className="flex items-center gap-2">
                 <Avatar className="w-10 h-10">
                     <AvatarImage src="https://picsum.photos/seed/student/200" data-ai-hint="person portrait" />
                     <AvatarFallback>
@@ -47,7 +47,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                     <p className="font-semibold">Student</p>
                     <p className="text-muted-foreground">Grade 12</p>
                 </div>
-            </div>
+            </Link>
             <Button variant="ghost" size="icon">
                 <Bell className="size-5" />
             </Button>
