@@ -78,14 +78,16 @@ export default function Home() {
         </div>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
           {subjects.slice(0, 4).map((subject, i) => (
-            <motion.div
+             <motion.div
               key={subject.name}
               variants={itemVariants}
             >
-              <Card className="flex flex-col items-center justify-center p-4 text-center hover:bg-accent transition-colors cursor-pointer group">
-                <subject.icon className="w-8 h-8 mb-2 text-primary transition-transform group-hover:scale-110" />
-                <span className="font-semibold">{subject.name}</span>
-              </Card>
+              <Link href="/tasks">
+                <Card className="flex flex-col items-center justify-center p-4 text-center hover:bg-accent transition-colors cursor-pointer group">
+                  <subject.icon className="w-8 h-8 mb-2 text-primary transition-transform group-hover:scale-110" />
+                  <span className="font-semibold">{subject.name}</span>
+                </Card>
+              </Link>
             </motion.div>
           ))}
         </div>
