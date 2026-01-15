@@ -1,0 +1,118 @@
+{
+  "entities": {
+    "Task": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Task",
+      "type": "object",
+      "description": "Represents a learning activity sheet (LAS) or task assigned to a student.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Task entity."
+        },
+        "subject": {
+          "type": "string",
+          "description": "The subject of the task (e.g., Math, Science, English)."
+        },
+        "taskName": {
+          "type": "string",
+          "description": "The name or description of the task (e.g., LAS #10, Essay Draft)."
+        },
+        "dueDate": {
+          "type": "string",
+          "description": "The date and time the task is due.",
+          "format": "date-time"
+        },
+        "isCompleted": {
+          "type": "boolean",
+          "description": "Indicates whether the task has been completed."
+        }
+      },
+      "required": [
+        "id",
+        "subject",
+        "taskName",
+        "dueDate",
+        "isCompleted"
+      ]
+    },
+    "Log": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Log",
+      "type": "object",
+      "description": "Represents a log entry in the terminal feed.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Log entry."
+        },
+        "timestamp": {
+          "type": "string",
+          "description": "The timestamp of the log entry.",
+          "format": "date-time"
+        },
+        "subject": {
+          "type": "string",
+          "description": "The subject related to the log entry (e.g., Math, Science, English)."
+        },
+        "action": {
+          "type": "string",
+          "description": "The action or message of the log entry (e.g., CHAIN SECURED, PENDING, ENGLISH BACKLOG DETECTED!)."
+        }
+      },
+      "required": [
+        "id",
+        "timestamp",
+        "subject",
+        "action"
+      ]
+    }
+  },
+  "auth": {
+    "providers": [
+      "password",
+      "anonymous"
+    ]
+  },
+  "firestore": {
+    "structure": [
+      {
+        "path": "/users/{userId}/tasks/{taskId}",
+        "definition": {
+          "entityName": "Task",
+          "schema": {
+            "$ref": "#/backend/entities/Task"
+          },
+          "description": "Stores task data for each user. Access is restricted to the owner (user).",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier of the user."
+            },
+            {
+              "name": "taskId",
+              "description": "The unique identifier of the task."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/logs/{logId}",
+        "definition": {
+          "entityName": "Log",
+          "schema": {
+            "$ref": "#/backend/entities/Log"
+          },
+          "description": "Stores log entries for the terminal feed. Timestamps allow for ordering the data and is intended to be public.",
+          "params": [
+            {
+              "name": "logId",
+              "description": "The unique identifier of the log entry."
+            }
+          ]
+        }
+      }
+    ],
+    "reasoning": "The Firestore structure is designed to support a terminal-style dashboard for a student productivity app (\"Mission Control\"). It prioritizes authorization independence and efficient querying for the live feed. The design segregates user-specific data (tasks) from global log data to ensure that security rules are simple and debuggable.\n\nAuthorization Independence:\n\n*   Logs: Since logs are a global feed, no specific authorization is applied besides creation (if needed). Read access is assumed to be public, based on the use case.\n*   Tasks: Task data is organized under `/users/{userId}/tasks/{taskId}`. This structure inherently provides authorization independence as access is determined by the path (ownership). This structure uses path-based ownership, where each user can only access tasks under their respective user ID, eliminating the need for `get()` calls in security rules to verify ownership.\n\nQAPs Support:\n\n*   Logs: The `/logs` collection supports the live feed feature. A query like `query(collection(db, \"logs\"), orderBy(\"timestamp\", \"desc\"), limit(5))` retrieves the latest logs efficiently, adhering to the QAPs principle of rules not being filters.\n* Tasks: The `/users/{userId}/tasks` collection allows secure listing of tasks for a specific user. The security rules can simply check if `request.auth.uid == userId` to allow the list operation, without needing to filter based on task properties."
+  }
+}
