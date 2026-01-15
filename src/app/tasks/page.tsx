@@ -63,7 +63,8 @@ export default function TasksPage() {
       <Accordion 
         type="multiple" 
         className="w-full space-y-4"
-        defaultValue={defaultActiveItems}
+        defaultValue={isLoading ? [] : defaultActiveItems}
+        key={isLoading ? 'loading' : 'loaded'} // Add key to force re-render
       >
         {sortedSubjects.map(subject => {
           const subjectTasks = getTasksBySubject(subject.name);
