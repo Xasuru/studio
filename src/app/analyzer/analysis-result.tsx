@@ -5,12 +5,7 @@ import { type LasAnalysisOutput } from '@/ai/flows/las-analyzer-flow';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 
-interface AnalysisResultProps {
-  result: LasAnalysisOutput | null;
-  isLoading: boolean;
-}
-
-const Typewriter = ({ text }: { text: string }) => {
+const Typewriter = ({ text, onComplete }: { text: string; onComplete?: () => void }) => {
   const [displayedText, setDisplayedText] = useState('');
 
   useEffect(() => {
@@ -18,14 +13,17 @@ const Typewriter = ({ text }: { text: string }) => {
     let i = 0;
     const intervalId = setInterval(() => {
       if (i < text.length) {
-        setDisplayedText(prev => prev + text[i]);
+        setDisplayedText(prev => prev + text.charAt(i));
         i++;
       } else {
         clearInterval(intervalId);
+        if (onComplete) {
+          onComplete();
+        }
       }
     }, 10);
     return () => clearInterval(intervalId);
-  }, [text]);
+  }, [text, onComplete]);
 
   return <>{displayedText}</>;
 };

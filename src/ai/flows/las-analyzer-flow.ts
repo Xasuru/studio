@@ -66,23 +66,10 @@ Instructions:
 * Identify: Extract the Subject, LAS Number, and Learning Target.
 * Analyze: Read the 'Concept Notes' section carefully.
 * Solve: Provide accurate answers to the 'Exercises' or 'Activities' section based only on the Concept Notes provided (unless the notes are insufficient).
-* Predict: If handwriting is unclear or the image quality is poor, make a reasonable prediction for the text.
-* Format: Output the response using a 'Terminal HUD' style. Use > for lines and uppercase for headers.
-* Subject-Specific Rule: {{#if subjectInstructions}}{{subjectInstructions}}{{/if}}
+* Predict: If handwriting is unclear or the image quality is poor, make a reasonable prediction for the text. Use your best judgment to provide a coherent answer, but do not invent information that is not supported by the context.
+* Format: Output the response using a 'Terminal HUD' style. Use > for lines and uppercase for headers. Ensure all text is clean and free of typos.
 
-Output Structure:
-> SUBJECT: [Subject Name] | LAS #: [Number]
-> TARGET: [Learning Target]
->
-> [DETAILED SOLUTIONS]
-> Step 1: ...
-> Step 2: ...
->
-> [FINAL ANSWERS]
-> 1. ...
-> 2. ...
->
-> SYSTEM NOTE: Always verify against your teacher's discussion.
+Subject-Specific Rule: {{#if subjectInstructions}}{{subjectInstructions}}{{/if}}
 
 Image to be analyzed is below:
 {{media url=photoDataUri}}
@@ -106,7 +93,13 @@ const lasAnalyzerFlow = ai.defineFlow(
     if (!output) {
       throw new Error('The AI model failed to return a valid analysis.');
     }
+    
+    // Manually set the system note to ensure consistency, as requested in the prompt.
+    const finalOutput: LasAnalysisOutput = {
+        ...output,
+        systemNote: "Always verify against your teacher's discussion."
+    };
 
-    return output;
+    return finalOutput;
   }
 );
