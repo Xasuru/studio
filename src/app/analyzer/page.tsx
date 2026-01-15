@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -23,6 +23,7 @@ export default function AnalyzerPage() {
   const [analysisResult, setAnalysisResult] = useState<LasAnalysisOutput | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -94,6 +95,7 @@ export default function AnalyzerPage() {
                       <FormControl>
                         <div
                           className="relative flex flex-col items-center justify-center w-full h-full border-2 border-dashed rounded-lg cursor-pointer border-border hover:border-primary transition-colors"
+                          onClick={() => fileInputRef.current?.click()}
                           onDragOver={e => e.preventDefault()}
                           onDrop={e => {
                             e.preventDefault();
@@ -117,6 +119,7 @@ export default function AnalyzerPage() {
                           )}
                           <input
                             id="file-upload"
+                            ref={fileInputRef}
                             type="file"
                             className="sr-only"
                             accept="image/*"
