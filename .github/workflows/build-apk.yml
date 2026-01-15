@@ -1,8 +1,6 @@
 name: Build Vanguard APK
 on: 
-  push:
-    branches: [ main ]
-  workflow_dispatch: # This adds the manual "Run" button
+  workflow_dispatch: # This gives you the manual "Run workflow" button
 
 jobs:
   build:
@@ -22,11 +20,10 @@ jobs:
         with:
           channel: 'stable'
 
-      - name: Get Dependencies
-        run: flutter pub get
-
       - name: Build APK
-        run: flutter build apk --release
+        run: |
+          flutter pub get
+          flutter build apk --release
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
