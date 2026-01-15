@@ -33,6 +33,7 @@ import {
 } from '@/components/ui/form';
 import { GanttChartSquare } from 'lucide-react';
 import { subjects } from '@/lib/types';
+import { motion } from 'framer-motion';
 
 const formSchema = z.object({
   subject: z.string().min(1, { message: 'Subject is required.' }),
@@ -49,7 +50,7 @@ export default function AddTaskDialog() {
     defaultValues: {
       subject: '',
       taskName: '',
-      lasNumber: '' as any, // Changed from undefined to empty string
+      lasNumber: '' as any,
     },
   });
 
@@ -62,9 +63,14 @@ export default function AddTaskDialog() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button size="icon" className="h-16 w-16 rounded-full shadow-lg bg-primary hover:bg-primary/90 text-primary-foreground">
-          <GanttChartSquare className="h-8 w-8" />
-        </Button>
+        <motion.div
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+        >
+          <Button size="icon" className="h-16 w-16 rounded-full shadow-lg bg-primary hover:bg-primary/90 text-primary-foreground shadow-primary/30">
+            <GanttChartSquare className="h-8 w-8" />
+          </Button>
+        </motion.div>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px] bg-card border-border">
         <DialogHeader>

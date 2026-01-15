@@ -5,6 +5,7 @@ import { useTasks } from '@/hooks/use-tasks';
 import type { Task } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { Checkbox } from '@/components/ui/checkbox';
+import { motion } from 'framer-motion';
 
 
 interface TaskItemProps {
@@ -19,13 +20,17 @@ export default function TaskItem({ task }: TaskItemProps) {
   };
   
   return (
-    <div
+    <motion.div
       onClick={handleToggle}
       role="button"
       aria-pressed={task.isCompleted}
+      layout
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
       className={cn(
         'flex items-center gap-3 rounded-lg p-3 transition-colors hover:bg-accent/50',
-        task.isCompleted && 'opacity-60'
+        task.isCompleted && 'opacity-50'
       )}
     >
       <Checkbox
@@ -44,6 +49,6 @@ export default function TaskItem({ task }: TaskItemProps) {
         {task.taskName}
       </label>
        <div className="text-xs text-muted-foreground">{task.dueDate}</div>
-    </div>
+    </motion.div>
   );
 }

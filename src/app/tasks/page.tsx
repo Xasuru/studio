@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/accordion"
 import { ArrowLeft } from 'lucide-react';
 import TaskItem from '../components/task-item';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export default function TasksPage() {
   const { tasks, isLoading } = useTasks();
@@ -30,13 +31,6 @@ export default function TasksPage() {
 
       if (hasIncompleteA && !hasIncompleteB) return -1;
       if (!hasIncompleteA && hasIncompleteB) return 1;
-
-      // Naive date sort, you might want to replace with date-fns for accuracy
-      const nearestDueDateA = Math.min(...tasksA.filter(t => !t.isCompleted).map(t => new Date(t.dueDate).getTime() || Infinity));
-      const nearestDueDateB = Math.min(...tasksB.filter(t => !t.isCompleted).map(t => new Date(t.dueDate).getTime() || Infinity));
-
-      if (nearestDueDateA < nearestDueDateB) return -1;
-      if (nearestDueDateA > nearestDueDateB) return 1;
       
       return a.name.localeCompare(b.name);
     });
@@ -60,48 +54,55 @@ export default function TasksPage() {
         </div>
       </header>
       
-      <Accordion 
-        type="multiple" 
-        className="w-full space-y-4"
-        defaultValue={isLoading ? [] : defaultActiveItems}
-        key={isLoading ? 'loading' : 'loaded'} // Add key to force re-render
-      >
-        {sortedSubjects.map(subject => {
-          const subjectTasks = getTasksBySubject(subject.name);
-          const incompleteCount = subjectTasks.filter(t => !t.isCompleted).length;
+      {isLoading ? (
+         <div className="w-full space-y-4">
+          {[...Array(4)].map((_, i) => (
+             <Skeleton key={i} className="h-24 w-full rounded-lg" />
+          ))}
+        </div>
+      ) : (
+        <Accordion 
+          type="multiple" 
+          className="w-full space-y-4"
+          defaultValue={defaultActiveItems}
+        >
+          {sortedSubjects.map(subject => {
+            const subjectTasks = getTasksBySubject(subject.name);
+            const incompleteCount = subjectTasks.filter(t => !t.isCompleted).length;
 
-          return (
-            <AccordionItem value={subject.name} key={subject.name} className="border-b-0 rounded-lg bg-card overflow-hidden">
-              <AccordionTrigger className="px-4 py-3 hover:no-underline">
-                <div className="flex items-center gap-4">
-                  <div className="p-3 bg-primary/10 rounded-full">
-                    <subject.icon className="w-5 h-5 text-primary" />
+            return (
+              <AccordionItem value={subject.name} key={subject.name} className="border-b-0 rounded-lg bg-card overflow-hidden transition-all hover:shadow-lg hover:shadow-primary/10">
+                <AccordionTrigger className="px-4 py-3 hover:no-underline group">
+                  <div className="flex items-center gap-4">
+                    <div className="p-3 bg-gradient-to-br from-primary/20 to-primary/5 rounded-full group-hover:from-primary/30 transition-colors">
+                      <subject.icon className="w-5 h-5 text-primary" />
+                    </div>
+                    <div className="text-left">
+                      <p className="font-semibold text-base">{subject.name}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {incompleteCount > 0 ? `${incompleteCount} task${incompleteCount > 1 ? 's' : ''} due` : 'All caught up!'}
+                      </p>
+                    </div>
                   </div>
-                  <div className="text-left">
-                    <p className="font-semibold">{subject.name}</p>
-                    <p className="text-xs text-muted-foreground">
-                      {incompleteCount > 0 ? `${incompleteCount} task${incompleteCount > 1 ? 's' : ''} due` : 'All caught up!'}
-                    </p>
-                  </div>
-                </div>
-              </AccordionTrigger>
-              <AccordionContent className="px-4 pb-3">
-                {subjectTasks.length > 0 ? (
-                  <div className="flex flex-col gap-2 pt-2 border-t">
-                    {subjectTasks.map(task => (
-                      <TaskItem key={task.id} task={task} />
-                    ))}
-                  </div>
-                ) : (
-                  <div className="text-center text-sm text-muted-foreground py-4">
-                    No tasks for {subject.name} yet.
-                  </div>
-                )}
-              </AccordionContent>
-            </AccordionItem>
-          );
-        })}
-      </Accordion>
+                </AccordionTrigger>
+                <AccordionContent className="px-4 pb-3">
+                  {subjectTasks.length > 0 ? (
+                    <div className="flex flex-col gap-2 pt-2 border-t">
+                      {subjectTasks.sort((a,b) => (a.isCompleted ? 1 : -1) - (b.isCompleted ? 1 : -1) || a.taskName.localeCompare(b.taskName)).map(task => (
+                        <TaskItem key={task.id} task={task} />
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center text-sm text-muted-foreground py-4">
+                      No tasks for {subject.name} yet.
+                    </div>
+                  )}
+                </AccordionContent>
+              </AccordionItem>
+            );
+          })}
+        </Accordion>
+      )}
     </div>
   );
 }
