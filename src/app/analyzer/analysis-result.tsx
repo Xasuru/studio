@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { type LasAnalysisOutput } from '@/ai/flows/las-analyzer-flow';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -17,9 +17,10 @@ const Typewriter = ({ text }: { text: string }) => {
     setDisplayedText(''); // Reset on new text
     let i = 0;
     const intervalId = setInterval(() => {
-      setDisplayedText(prev => prev + text[i]);
-      i++;
-      if (i >= text.length) {
+      if (i < text.length) {
+        setDisplayedText(prev => prev + text[i]);
+        i++;
+      } else {
         clearInterval(intervalId);
       }
     }, 10);
@@ -31,7 +32,7 @@ const Typewriter = ({ text }: { text: string }) => {
 
 const Section = ({ title, children }: { title: string, children: React.ReactNode }) => (
     <div>
-        <h3 className="font-code uppercase text-primary mb-2">> {title}</h3>
+        <h3 className="font-code uppercase text-primary mb-2">{'>'} {title}</h3>
         <div className="font-code text-foreground/90 pl-4 space-y-1">{children}</div>
     </div>
 );
@@ -65,7 +66,7 @@ export default function AnalysisResult({ result, isLoading }: AnalysisResultProp
 
   if (!result) {
     return (
-      <Card className="flex items-center justify-center font-code bg-black/80 text-muted-foreground text-sm">
+      <Card className="flex items-center justify-center font-code bg-black/80 text-muted-foreground text-sm h-full">
         <p>&gt; AI response will appear here...</p>
       </Card>
     );
