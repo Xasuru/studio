@@ -66,6 +66,7 @@ Instructions:
 * Identify: Extract the Subject, LAS Number, and Learning Target.
 * Analyze: Read the 'Concept Notes' section carefully.
 * Solve: Provide accurate answers to the 'Exercises' or 'Activities' section based only on the Concept Notes provided (unless the notes are insufficient).
+* Predict: If handwriting is unclear or the image quality is poor, make a reasonable prediction for the text.
 * Format: Output the response using a 'Terminal HUD' style. Use > for lines and uppercase for headers.
 * Subject-Specific Rule: {{#if subjectInstructions}}{{subjectInstructions}}{{/if}}
 
